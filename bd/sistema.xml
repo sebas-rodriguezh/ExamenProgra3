@@ -24,34 +24,33 @@
     </usuarios>
     <proyectos>
         <proyecto>
-            <codigo>PROY-001</codigo>
-            <descripcion>Crear repositorios de gitHub</descripcion>
-            <encargado>Ulises Villagran</encargado>
+            <codigo>P1</codigo>
+            <descripcion>Verificar repos en git</descripcion>
+            <encargado>Sebastián Pérez</encargado>
             <tareas>
                 <tarea>
-                    <numero>PROY-001-T001</numero>
-                    <descripcion>Revisar que los nuevos se unan</descripcion>
-                    <vence>2025-09-20</vence>
-                    <prioridad>Alta</prioridad>
-                    <estado>En-progreso</estado>
+                    <numero>T1</numero>
+                    <descripcion>Cambiar las URL</descripcion>
+                    <vence>2025-09-13</vence>
+                    <prioridad>Baja</prioridad>
+                    <estado>Abierta</estado>
                     <responsable>Juan Rodriguez</responsable>
                 </tarea>
-            </tareas>
-        </proyecto>
-        <proyecto>
-            <codigo>PROY-002</codigo>
-            <descripcion>Cambiar bases de datos</descripcion>
-            <encargado>Marcos Azofeifa</encargado>
-            <tareas>
                 <tarea>
-                    <numero>PROY-002-T001</numero>
-                    <descripcion>Buscar contexto</descripcion>
-                    <vence>2025-09-26</vence>
-                    <prioridad>Baja</prioridad>
+                    <numero>T2</numero>
+                    <descripcion>otrascosas</descripcion>
+                    <vence>2025-09-12</vence>
+                    <prioridad>Media</prioridad>
                     <estado>En-revisión</estado>
                     <responsable>Sebastián Pérez</responsable>
                 </tarea>
             </tareas>
+        </proyecto>
+        <proyecto>
+            <codigo>P2</codigo>
+            <descripcion>Crear otra cosa</descripcion>
+            <encargado>Marcos Azofeifa</encargado>
+            <tareas/>
         </proyecto>
     </proyectos>
 </sistemaData>

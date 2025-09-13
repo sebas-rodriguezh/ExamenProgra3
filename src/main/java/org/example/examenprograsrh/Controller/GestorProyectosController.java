@@ -63,7 +63,7 @@ public class GestorProyectosController implements Initializable {
         configurarTablas();
         cargarProyectos();
         configurarInterfaz();
-        configurarEventos();
+        seguirRastroAlProyecto();
     }
 
     private void cargarUsuarios() {
@@ -131,11 +131,10 @@ public class GestorProyectosController implements Initializable {
         comboBoxEstadoTarea.setVisible(false);
         comboBoxResponsableTarea.setVisible(false);
         btnCrearTarea.setVisible(false);
-        //tableViewTareas.setVisible(false);
+        tableViewTareas.setVisible(false);
     }
 
-    private void configurarEventos() {
-        // Cuando se selecciona un proyecto, mostrar sus tareas
+    private void seguirRastroAlProyecto() {
         tableVIewProyectos.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     proyectoSeleccionado = newValue;
@@ -179,7 +178,6 @@ public class GestorProyectosController implements Initializable {
     }
 
 
-
     private void mostrarFormularioTareas() {
         lblTareas.setVisible(true);
         lblDescripcion.setVisible(true);
@@ -217,107 +215,63 @@ public class GestorProyectosController implements Initializable {
 
     @FXML
     private void crearProyecto() {
+        if (txtDescripcionProyecto.getText().isEmpty() || comboBoxEncargadoProyecto.getValue() == null) {
+            mostrarAlerta("Error", "Seleccione todos los campos.");
+            return;
+        }
+
         try {
-            String descripcion = txtDescripcionProyecto.getText().trim();
-            String encargadoNombre = comboBoxEncargadoProyecto.getValue();
+            String codigo = "P" + (listaProyectos.size() + 1);
 
-            if (descripcion.isEmpty()) {
-                mostrarAlerta("Error", "La descripción del proyecto es obligatoria");
-                return;
-            }
+            String nombreCompleto = comboBoxEncargadoProyecto.getValue();
+            String[] partes = nombreCompleto.split(" ");
+            Usuario encargado = new Usuario(partes[0], partes.length > 1 ? partes[1] : "");
 
-            if (encargadoNombre == null) {
-                mostrarAlerta("Error", "Debe seleccionar un encargado");
-                return;
-            }
+            Proyecto proyecto = new Proyecto(codigo, txtDescripcionProyecto.getText(), encargado);
+            proyectoLogica.createProyecto(proyecto);
 
-            // Generar código automáticamente
-            String codigo = "PROY-" + String.format("%03d", listaProyectos.size() + 1);
-
-            // Crear usuario encargado
-            String[] nombres = encargadoNombre.split(" ");
-            Usuario encargado = new Usuario(nombres[0], nombres.length > 1 ? nombres[1] : "");
-
-            // Crear proyecto
-            Proyecto nuevoProyecto = new Proyecto(codigo, descripcion, encargado);
-            proyectoLogica.createProyecto(nuevoProyecto);
-
-            // Limpiar campos
+            listaProyectos.add(proyecto);
             txtDescripcionProyecto.clear();
             comboBoxEncargadoProyecto.getSelectionModel().clearSelection();
 
-            // Recargar proyectos
-            cargarProyectos();
-
-            mostrarAlerta("Éxito", "Proyecto creado exitosamente");
+            mostrarAlerta("Listo", "Proyecto creado: " + codigo);
 
         } catch (Exception e) {
-            mostrarAlerta("Error", "Error al crear proyecto: " + e.getMessage());
+            mostrarAlerta("Error", "No se pudo crear: " + e.getMessage());
         }
     }
 
     @FXML
     private void crearTarea() {
+        if (proyectoSeleccionado == null) {
+            mostrarAlerta("Error", "Primero selecciona un proyecto");
+            return;
+        }
+
+        if (txtDescripcionTarea.getText().isEmpty() || dtpFechaVence.getValue() == null || comboBoxPrioridadTarea.getValue() == null || comboBoxEstadoTarea.getValue() == null || comboBoxResponsableTarea.getValue() == null) {
+            mostrarAlerta("Error", "Completa todos los campos");
+            return;
+        }
         try {
-            if (proyectoSeleccionado == null) {
-                mostrarAlerta("Error", "Debe seleccionar un proyecto primero");
-                return;
-            }
+            String numeroTarea = "T" + (proyectoSeleccionado.getTareas().size() + 1);
+            String nombreCompleto = comboBoxResponsableTarea.getValue();
+            String[] partes = nombreCompleto.split(" ");
+            Usuario responsable = new Usuario(partes[0], partes.length > 1 ? partes[1] : "");
 
-            String descripcion = txtDescripcionTarea.getText().trim();
-            LocalDate vence = dtpFechaVence.getValue();
-            String prioridad = comboBoxPrioridadTarea.getValue();
-            String estado = comboBoxEstadoTarea.getValue();
-            String responsableNombre = comboBoxResponsableTarea.getValue();
+            Tarea tarea = new Tarea(numeroTarea, txtDescripcionTarea.getText(), dtpFechaVence.getValue(), comboBoxPrioridadTarea.getValue(), comboBoxEstadoTarea.getValue(), responsable);
+            proyectoLogica.agregarTareaAProyecto(proyectoSeleccionado.getCodigo(), tarea);
+            proyectoSeleccionado.agregarTarea(tarea);
+            listaTareas.add(tarea);
+            txtDescripcionTarea.clear();
+            dtpFechaVence.setValue(null);
+            comboBoxPrioridadTarea.getSelectionModel().clearSelection();
+            comboBoxEstadoTarea.getSelectionModel().clearSelection();
+            comboBoxResponsableTarea.getSelectionModel().clearSelection();
 
-            if (descripcion.isEmpty()) {
-                mostrarAlerta("Error", "La descripción de la tarea es obligatoria");
-                return;
-            }
-
-            if (vence == null) {
-                mostrarAlerta("Error", "La fecha de vencimiento es obligatoria");
-                return;
-            }
-
-            if (prioridad == null) {
-                mostrarAlerta("Error", "Debe seleccionar una prioridad");
-                return;
-            }
-
-            if (estado == null) {
-                mostrarAlerta("Error", "Debe seleccionar un estado");
-                return;
-            }
-
-            if (responsableNombre == null) {
-                mostrarAlerta("Error", "Debe seleccionar un responsable");
-                return;
-            }
-
-            // Generar número de tarea automáticamente
-            String numeroTarea = proyectoSeleccionado.getCodigo() + "-T" +
-                    String.format("%03d", proyectoSeleccionado.getTareas().size() + 1);
-
-            // Crear usuario responsable
-            String[] nombres = responsableNombre.split(" ");
-            Usuario responsable = new Usuario(nombres[0], nombres.length > 1 ? nombres[1] : "");
-
-            // Crear tarea
-            Tarea nuevaTarea = new Tarea(numeroTarea, descripcion, vence, prioridad, estado, responsable);
-            proyectoLogica.agregarTareaAProyecto(proyectoSeleccionado.getCodigo(), nuevaTarea);
-
-            // Limpiar campos
-            limpiarFormularioTareas();
-
-            // Recargar proyectos y tareas
-            cargarProyectos();
-            mostrarTareasProyecto(proyectoSeleccionado);
-
-            mostrarAlerta("Éxito", "Tarea creada exitosamente");
+            mostrarAlerta("Listo", "Tarea creada: " + numeroTarea);
 
         } catch (Exception e) {
-            mostrarAlerta("Error", "Error al crear tarea: " + e.getMessage());
+            mostrarAlerta("Error", "No se pudo crear: " + e.getMessage());
         }
     }
 
