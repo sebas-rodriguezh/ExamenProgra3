@@ -11,6 +11,7 @@ public class Usuario {
         this.apellido = apellido;
     }
 
+
     public String getNombre() { return nombre; }
     public String getApellido() { return apellido; }
 

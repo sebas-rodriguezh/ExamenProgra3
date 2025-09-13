@@ -34,4 +34,12 @@ public class Proyecto {
         tareas.add(tarea);
     }
 
+    public String getEncargadoNombre() {
+        return encargado.getNombre() + " " + encargado.getApellido();
+    }
+
+    public int getNumeroTareas() {
+        return tareas.size();
+    }
+
 }

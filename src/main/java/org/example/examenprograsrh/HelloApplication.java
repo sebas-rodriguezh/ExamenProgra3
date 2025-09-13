@@ -10,6 +10,7 @@ import java.io.IOException;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+        //Profe, para que se actualize el #Tareas por proyecto tiene que cerrar y abrir el proyecto, para que las cargue bien ese número.
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/org/example/examenprograsrh/UI/gestorProyectos.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 700, 700);
         stage.setTitle("Hello!");

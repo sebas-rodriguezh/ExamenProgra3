@@ -61,7 +61,7 @@
                               <Font size="17.0" />
                            </font>
                         </Label>
-                        <Label layoutX="286.0" layoutY="325.0" prefHeight="34.0" prefWidth="269.0" text="No hay un proyecto seleccionado">
+                        <Label fx:id="lblProyectoSeleccionado" layoutX="286.0" layoutY="325.0" prefHeight="34.0" prefWidth="269.0" text="No hay un proyecto seleccionado">
                            <font>
                               <Font size="13.0" />
                            </font>

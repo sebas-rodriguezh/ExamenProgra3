@@ -25,32 +25,70 @@
     <proyectos>
         <proyecto>
             <codigo>P1</codigo>
-            <descripcion>Verificar repos en git</descripcion>
+            <descripcion>Crear repositorios en git</descripcion>
             <encargado>Sebastián Pérez</encargado>
             <tareas>
                 <tarea>
                     <numero>T1</numero>
-                    <descripcion>Cambiar las URL</descripcion>
+                    <descripcion>Realizar inserciones</descripcion>
                     <vence>2025-09-13</vence>
-                    <prioridad>Baja</prioridad>
-                    <estado>Abierta</estado>
-                    <responsable>Juan Rodriguez</responsable>
+                    <prioridad>Alta</prioridad>
+                    <estado>Resuelta</estado>
+                    <responsable>Marcos Azofeifa</responsable>
                 </tarea>
                 <tarea>
                     <numero>T2</numero>
-                    <descripcion>otrascosas</descripcion>
-                    <vence>2025-09-12</vence>
+                    <descripcion>Comparar licencias</descripcion>
+                    <vence>2025-09-17</vence>
                     <prioridad>Media</prioridad>
-                    <estado>En-revisión</estado>
-                    <responsable>Sebastián Pérez</responsable>
+                    <estado>Resuelta</estado>
+                    <responsable>Juan Rodriguez</responsable>
                 </tarea>
             </tareas>
         </proyecto>
         <proyecto>
             <codigo>P2</codigo>
-            <descripcion>Crear otra cosa</descripcion>
-            <encargado>Marcos Azofeifa</encargado>
+            <descripcion>Actualizar bases</descripcion>
+            <encargado>Ulises Villagran</encargado>
+            <tareas>
+                <tarea>
+                    <numero>T1</numero>
+                    <descripcion>Borrar repetidos</descripcion>
+                    <vence>2025-09-17</vence>
+                    <prioridad>Alta</prioridad>
+                    <estado>Resuelta</estado>
+                    <responsable>Ulises Villagran</responsable>
+                </tarea>
+            </tareas>
+        </proyecto>
+        <proyecto>
+            <codigo>P3</codigo>
+            <descripcion>Organizar almuerzo</descripcion>
+            <encargado>Maria Lopez</encargado>
             <tareas/>
+        </proyecto>
+        <proyecto>
+            <codigo>P4</codigo>
+            <descripcion>Responder APIS</descripcion>
+            <encargado>Ulises Villagran</encargado>
+            <tareas>
+                <tarea>
+                    <numero>T1</numero>
+                    <descripcion>Validar cambios</descripcion>
+                    <vence>2025-09-18</vence>
+                    <prioridad>Media</prioridad>
+                    <estado>En-progreso</estado>
+                    <responsable>Juan Rodriguez</responsable>
+                </tarea>
+                <tarea>
+                    <numero>T2</numero>
+                    <descripcion>Comprar TB</descripcion>
+                    <vence>2025-09-11</vence>
+                    <prioridad>Baja</prioridad>
+                    <estado>Resuelta</estado>
+                    <responsable>Sebastián Pérez</responsable>
+                </tarea>
+            </tareas>
         </proyecto>
     </proyectos>
 </sistemaData>

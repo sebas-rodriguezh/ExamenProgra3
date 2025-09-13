@@ -6,10 +6,8 @@ import org.example.examenprograsrh.Model.Proyecto;
 import org.example.examenprograsrh.Model.Tarea;
 import org.example.examenprograsrh.Model.Usuario;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class ProyectoLogica {
     private final SistemaDatos store;
@@ -21,23 +19,31 @@ public class ProyectoLogica {
         this.store = new SistemaDatos(RUTA_XML);
     }
 
-    // --------- Operaciones de Proyectos ---------
     public List<Proyecto> findAllProyectos() {
         SistemaConector data = store.load();
-        return data.getProyectos().stream()
-                .map(ProyectoMapper::toModel)
-                .collect(Collectors.toList());
+        List<Proyecto> proyectos = new ArrayList<>();
+
+        for (var entity : data.getProyectos()) {
+            proyectos.add(ProyectoMapper.toModel(entity));
+        }
+        return proyectos;
     }
 
     public Proyecto createProyecto(Proyecto proyecto) {
-        validarProyecto(proyecto);
+        if (proyecto == null) throw new RuntimeException("Proyecto no puede ser nulo");
+        if (proyecto.getCodigo() == null || proyecto.getCodigo().isEmpty())
+            throw new RuntimeException("Código es obligatorio");
+        if (proyecto.getDescripcion() == null || proyecto.getDescripcion().isEmpty())
+            throw new RuntimeException("Descripción es obligatoria");
+        if (proyecto.getEncargado() == null)
+            throw new RuntimeException("Encargado es obligatorio");
+
         SistemaConector data = store.load();
 
-        // Verificar si ya existe el código
-        boolean existeCodigo = data.getProyectos().stream()
-                .anyMatch(p -> p.getCodigo().equals(proyecto.getCodigo()));
-        if (existeCodigo) {
-            throw new IllegalArgumentException("Ya existe un proyecto con el código: " + proyecto.getCodigo());
+        for (var p : data.getProyectos()) {
+            if (p.getCodigo().equals(proyecto.getCodigo())) {
+                throw new RuntimeException("Ya existe proyecto con código: " + proyecto.getCodigo());
+            }
         }
 
         data.getProyectos().add(ProyectoMapper.toEntity(proyecto));
@@ -45,93 +51,59 @@ public class ProyectoLogica {
         return proyecto;
     }
 
-    public void updateProyecto(Proyecto proyecto) {
-        validarProyecto(proyecto);
+    public void agregarTareaAProyecto(String codigoProyecto, Tarea tarea) {
+        if (tarea == null) throw new RuntimeException("Tarea no puede ser nula");
+        if (tarea.getNumero() == null || tarea.getNumero().isEmpty())
+            throw new RuntimeException("Número de tarea es obligatorio");
+        if (tarea.getDescripcion() == null || tarea.getDescripcion().isEmpty())
+            throw new RuntimeException("Descripción es obligatoria");
+        if (tarea.getResponsable() == null)
+            throw new RuntimeException("Responsable es obligatorio");
+
         SistemaConector data = store.load();
 
-        for (int i = 0; i < data.getProyectos().size(); i++) {
-            if (data.getProyectos().get(i).getCodigo().equals(proyecto.getCodigo())) {
-                data.getProyectos().set(i, ProyectoMapper.toEntity(proyecto));
+        for (var proyecto : data.getProyectos()) {
+            if (proyecto.getCodigo().equals(codigoProyecto)) {
+                proyecto.getTareas().add(TareaMapper.toEntity(tarea));
                 store.save(data);
                 return;
             }
         }
-        throw new NoSuchElementException("No existe proyecto con código: " + proyecto.getCodigo());
-    }
-
-    public boolean deleteProyecto(String codigo) {
-        SistemaConector data = store.load();
-        boolean removed = data.getProyectos().removeIf(p -> p.getCodigo().equals(codigo));
-        if (removed) store.save(data);
-        return removed;
-    }
-
-    // --------- Operaciones de Tareas ---------
-    public void agregarTareaAProyecto(String codigoProyecto, Tarea tarea) {
-        validarTarea(tarea);
-        SistemaConector data = store.load();
-
-        Optional<org.example.examenprograsrh.Datos.ProyectoEntity> proyectoOpt = data.getProyectos().stream()
-                .filter(p -> p.getCodigo().equals(codigoProyecto))
-                .findFirst();
-
-        if (proyectoOpt.isPresent()) {
-            proyectoOpt.get().getTareas().add(TareaMapper.toEntity(tarea));
-            store.save(data);
-        } else {
-            throw new NoSuchElementException("No existe proyecto con código: " + codigoProyecto);
-        }
+        throw new RuntimeException("No existe proyecto: " + codigoProyecto);
     }
 
     public void actualizarTarea(String codigoProyecto, Tarea tarea) {
-        validarTarea(tarea);
+        if (tarea == null) throw new RuntimeException("Tarea no puede ser nula");
+        if (tarea.getNumero() == null || tarea.getNumero().isEmpty())
+            throw new RuntimeException("Número de tarea es obligatorio");
+        if (tarea.getDescripcion() == null || tarea.getDescripcion().isEmpty())
+            throw new RuntimeException("Descripción es obligatoria");
+        if (tarea.getResponsable() == null)
+            throw new RuntimeException("Responsable es obligatorio");
+
         SistemaConector data = store.load();
-
-        Optional<org.example.examenprograsrh.Datos.ProyectoEntity> proyectoOpt = data.getProyectos().stream()
-                .filter(p -> p.getCodigo().equals(codigoProyecto))
-                .findFirst();
-
-        if (proyectoOpt.isPresent()) {
-            var proyecto = proyectoOpt.get();
-            for (int i = 0; i < proyecto.getTareas().size(); i++) {
-                if (proyecto.getTareas().get(i).getNumero().equals(tarea.getNumero())) {
-                    proyecto.getTareas().set(i, TareaMapper.toEntity(tarea));
-                    store.save(data);
-                    return;
+        for (var proyecto : data.getProyectos()) {
+            if (proyecto.getCodigo().equals(codigoProyecto)) {
+                for (int i = 0; i < proyecto.getTareas().size(); i++) {
+                    if (proyecto.getTareas().get(i).getNumero().equals(tarea.getNumero())) {
+                        proyecto.getTareas().set(i, TareaMapper.toEntity(tarea));
+                        store.save(data);
+                        return;
+                    }
                 }
+                throw new RuntimeException("No existe tarea: " + tarea.getNumero());
             }
-            throw new NoSuchElementException("No existe tarea con número: " + tarea.getNumero());
-        } else {
-            throw new NoSuchElementException("No existe proyecto con código: " + codigoProyecto);
         }
+        throw new RuntimeException("No existe proyecto: " + codigoProyecto);
     }
 
-    // --------- Operaciones de Usuarios ---------
     public List<Usuario> findAllUsuarios() {
         SistemaConector data = store.load();
-        return data.getUsuarios().stream()
-                .map(UsuarioMapper::toModel)
-                .collect(Collectors.toList());
-    }
+        List<Usuario> usuarios = new ArrayList<>();
 
-    // --------- Validaciones ---------
-    private void validarProyecto(Proyecto proyecto) {
-        if (proyecto == null) throw new IllegalArgumentException("Proyecto no puede ser nulo");
-        if (proyecto.getCodigo() == null || proyecto.getCodigo().isBlank())
-            throw new IllegalArgumentException("Código del proyecto es obligatorio");
-        if (proyecto.getDescripcion() == null || proyecto.getDescripcion().isBlank())
-            throw new IllegalArgumentException("Descripción del proyecto es obligatoria");
-        if (proyecto.getEncargado() == null)
-            throw new IllegalArgumentException("Encargado del proyecto es obligatorio");
-    }
-
-    private void validarTarea(Tarea tarea) {
-        if (tarea == null) throw new IllegalArgumentException("Tarea no puede ser nula");
-        if (tarea.getNumero() == null || tarea.getNumero().isBlank())
-            throw new IllegalArgumentException("Número de tarea es obligatorio");
-        if (tarea.getDescripcion() == null || tarea.getDescripcion().isBlank())
-            throw new IllegalArgumentException("Descripción de tarea es obligatoria");
-        if (tarea.getResponsable() == null)
-            throw new IllegalArgumentException("Responsable de tarea es obligatorio");
+        for (var entity : data.getUsuarios()) {
+            usuarios.add(UsuarioMapper.toModel(entity));
+        }
+        return usuarios;
     }
 }

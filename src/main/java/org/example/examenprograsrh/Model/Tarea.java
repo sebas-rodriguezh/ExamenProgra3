@@ -21,6 +21,9 @@ public class Tarea {
         this.responsable = responsable;
     }
 
+    public String getResponsableNombre() {
+        return responsable.getNombre() + " " + responsable.getApellido();
+    }
     public String getNumero() { return numero; }
     public void setNumero(String numero) { this.numero = numero; }
 
