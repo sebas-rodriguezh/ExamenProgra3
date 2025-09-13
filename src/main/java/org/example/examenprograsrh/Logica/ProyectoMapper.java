@@ -17,11 +17,9 @@ public class ProyectoMapper {
         proyecto.setCodigo(entity.getCodigo());
         proyecto.setDescripcion(entity.getDescripcion());
 
-        // Convertir encargado (string) a objeto Usuario
         String[] nombres = entity.getEncargado().split(" ");
         proyecto.setEncargado(new Usuario(nombres[0], nombres.length > 1 ? nombres[1] : ""));
 
-        // Convertir tareas
         proyecto.setTareas(entity.getTareas().stream()
                 .map(TareaMapper::toModel)
                 .collect(Collectors.toList()));
@@ -37,7 +35,6 @@ public class ProyectoMapper {
         entity.setDescripcion(model.getDescripcion());
         entity.setEncargado(model.getEncargado().getNombre() + " " + model.getEncargado().getApellido());
 
-        // Convertir tareas
         entity.setTareas(model.getTareas().stream()
                 .map(TareaMapper::toEntity)
                 .collect(Collectors.toList()));

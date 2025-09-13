@@ -32,8 +32,6 @@ public class SistemaDatos {
 
             if (!Files.exists(xmlPath)) {
                 cache = new SistemaConector();
-                // Datos iniciales de ejemplo
-                inicializarDatosEjemplo(cache);
                 save(cache);
                 return cache;
             }
@@ -47,34 +45,6 @@ public class SistemaDatos {
         } catch (Exception e) {
             throw new RuntimeException("Error cargando XML: " + xmlPath, e);
         }
-    }
-
-    private void inicializarDatosEjemplo(SistemaConector data) {
-        UsuarioEntity user1 = new UsuarioEntity();
-        user1.setNombre("En Cartes");
-        user1.setApellido("Pérez");
-
-        UsuarioEntity user2 = new UsuarioEntity();
-        user2.setNombre("Satya");
-        user2.setApellido("Nadella");
-
-        UsuarioEntity user3 = new UsuarioEntity();
-        user3.setNombre("Mark");
-        user3.setApellido("Zuckerberg");
-
-        UsuarioEntity user4 = new UsuarioEntity();
-        user4.setNombre("Sam");
-        user4.setApellido("Altman");
-
-        UsuarioEntity user5 = new UsuarioEntity();
-        user5.setNombre("Tim");
-        user5.setApellido("Cook");
-
-        data.getUsuarios().add(user1);
-        data.getUsuarios().add(user2);
-        data.getUsuarios().add(user3);
-        data.getUsuarios().add(user4);
-        data.getUsuarios().add(user5);
     }
 
     public synchronized void save(SistemaConector data) {
