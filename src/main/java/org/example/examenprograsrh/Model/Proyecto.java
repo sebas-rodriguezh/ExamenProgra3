@@ -8,17 +8,14 @@ public class Proyecto {
     private String descripcion;
     private Usuario encargado;
     private List<Tarea> tareas = new ArrayList<>();
-    private int numeroTarea;
 
     public Proyecto() {
-        numeroTarea = 0;
     }
 
     public Proyecto(String codigo, String descripcion, Usuario encargado) {
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.encargado = encargado;
-        numeroTarea = 0;
     }
 
     public String getCodigo() { return codigo; }
@@ -37,7 +34,4 @@ public class Proyecto {
         tareas.add(tarea);
     }
 
-    public int getNumero() {
-        return numeroTarea++;
-    }
 }

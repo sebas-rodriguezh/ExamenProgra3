@@ -22,5 +22,36 @@
             <apellido>Villagran</apellido>
         </usuario>
     </usuarios>
-    <proyectos/>
+    <proyectos>
+        <proyecto>
+            <codigo>PROY-001</codigo>
+            <descripcion>Crear repositorios de gitHub</descripcion>
+            <encargado>Ulises Villagran</encargado>
+            <tareas>
+                <tarea>
+                    <numero>PROY-001-T001</numero>
+                    <descripcion>Revisar que los nuevos se unan</descripcion>
+                    <vence>2025-09-20</vence>
+                    <prioridad>Alta</prioridad>
+                    <estado>En-progreso</estado>
+                    <responsable>Juan Rodriguez</responsable>
+                </tarea>
+            </tareas>
+        </proyecto>
+        <proyecto>
+            <codigo>PROY-002</codigo>
+            <descripcion>Cambiar bases de datos</descripcion>
+            <encargado>Marcos Azofeifa</encargado>
+            <tareas>
+                <tarea>
+                    <numero>PROY-002-T001</numero>
+                    <descripcion>Buscar contexto</descripcion>
+                    <vence>2025-09-26</vence>
+                    <prioridad>Baja</prioridad>
+                    <estado>En-revisión</estado>
+                    <responsable>Sebastián Pérez</responsable>
+                </tarea>
+            </tareas>
+        </proyecto>
+    </proyectos>
 </sistemaData>
